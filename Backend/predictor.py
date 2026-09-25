@@ -68,7 +68,7 @@ def get_recommendation(risk_level: str, category: str = "") -> str:
     elif risk_level == "Sedang":
         return (
             "TINDAKAN PREVENTIF & MEDIASI (RISIKO SEDANG): Segera fasilitasi dialog/mediasi resmi antar pihak "
-            "yang bersengketa dengan melibatkan Pihak Kecamatan, Muspika, Tokoh Masyarakat, dan Aparat Desa. "
+            "yang bersengketa dengan melibatkan Pihak Kecamatan/ Muspika Tokoh Masyarakat, dan Aparat Desa. "
             "Tingkatkan pemantauan lapangan untuk mencegah eskalasi."
         )
     else:  # Rendah

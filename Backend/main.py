@@ -13,33 +13,16 @@ import pandas as pd
 import models
 import schemas
 import predictor
-from database import engine, get_db
+from database import engine, get_db, SessionLocal
 
-# ─── Migration Database Otomatis ──────────────────────────────────────────────
+# ─── Migration & Table Creation MySQL ──────────────────────────────────────────
 
-def auto_migrate_database():
-    """Memastikan kolom kecamatan, pihak_terlibat, dan status_penanganan ada di SQLite."""
-    db_path = os.path.join(os.path.dirname(__file__), "bakesbangpol.db")
-    if os.path.exists(db_path):
-        try:
-            conn = sqlite3.connect(db_path)
-            c = conn.cursor()
-            cols = [r[1] for r in c.execute("PRAGMA table_info(riwayat_konflik)").fetchall()]
-            if cols:
-                if "kecamatan" not in cols:
-                    c.execute("ALTER TABLE riwayat_konflik ADD COLUMN kecamatan VARCHAR(100) DEFAULT 'Purwokerto Timur'")
-                if "pihak_terlibat" not in cols:
-                    c.execute("ALTER TABLE riwayat_konflik ADD COLUMN pihak_terlibat VARCHAR(255)")
-                if "status_penanganan" not in cols:
-                    c.execute("ALTER TABLE riwayat_konflik ADD COLUMN status_penanganan VARCHAR(50) DEFAULT 'Dalam Proses'")
-                conn.commit()
-            conn.close()
-        except Exception as e:
-            print("Migration info:", e)
+try:
+    models.Base.metadata.create_all(bind=engine)
+    print("[Database] Tabel MySQL berhasil disinkronkan.")
+except Exception as e:
+    print("[Database Error] Gagal melakukan create_all pada MySQL:", e)
 
-# Jalankan migrasi dan buat tabel
-auto_migrate_database()
-models.Base.metadata.create_all(bind=engine)
 
 # ─── Inisialisasi Aplikasi FastAPI ────────────────────────────────────────────
 
@@ -123,12 +106,28 @@ def seed_database_if_empty(db: Session):
         print("Seed error:", e)
 
 
+# ─── Startup Event Handler ────────────────────────────────────────────────────
+
+@app.on_event("startup")
+def startup_event():
+    """Memuat model ML dan seed database ke memori saat server dinyalakan."""
+    print("Memuat model ML (kategori & risiko)...")
+    predictor.get_model_kategori()
+    predictor.get_model_risiko()
+    print("Model ML berhasil dimuat ke memori!")
+    
+    db = SessionLocal()
+    try:
+        seed_database_if_empty(db)
+    finally:
+        db.close()
+
+
 # ─── Endpoints ────────────────────────────────────────────────────────────────
 
 @app.get("/", tags=["Root"])
 def root(db: Session = Depends(get_db)):
-    """Health check endpoint & auto-seed database."""
-    seed_database_if_empty(db)
+    """Health check endpoint."""
     return {
         "status": "online",
         "service": "SPK Konflik Sosial API Bakesbangpol Banyumas",

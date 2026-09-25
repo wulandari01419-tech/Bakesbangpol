@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPK Penanganan Konflik Sosial | BAKESBANGPOL Banyumas</title>
-  <meta name="description" content="Sistem Pendukung Keputusan Berbasis Kecerdasan Buatan untuk Klasifikasi dan Rekomendasi Penanganan Konflik Sosial Menggunakan Pendekatan Hybrid Rule-Based dan Machine Learning">
+  <title>SPK Penanganan Konflik Sosial | BAKESBANGPOL Kabupaten Banyumas</title>
+  <meta name="description" content="Sistem Pendukung Keputusan berbasis AI Hybrid (Rule-Based + Machine Learning) untuk Klasifikasi dan Rekomendasi Penanganan Konflik Sosial — BAKESBANGPOL Kabupaten Banyumas.">
+  <meta name="author" content="BAKESBANGPOL Kabupaten Banyumas">
+  <meta name="theme-color" content="#c81e1e">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Chart.js CDN -->
@@ -16,106 +18,162 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="light-mode">
+
+  <!-- Loading Bar -->
+  <div class="loading-bar" id="loadingBar" style="width:0;"></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Custom Modal -->
+  <div class="modal-overlay hidden" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-icon" id="modalIcon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 id="modalTitle">Konfirmasi Tindakan</h3>
+      <p id="modalMessage">Apakah Anda yakin ingin melanjutkan?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modalCancel" type="button">
+          <i class="fa-solid fa-xmark"></i> Batal
+        </button>
+        <button class="btn btn-danger-outline" id="modalConfirm" type="button">
+          <i class="fa-solid fa-check"></i> Ya, Lanjutkan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-to-top" id="scrollToTop" aria-label="Kembali ke Atas" title="Kembali ke Atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
   <div class="app-container">
-    <!-- Navbar Header -->
-    <header class="navbar">
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="navbar" role="banner">
       <div class="brand">
-        <div class="brand-logo">
-          <i class="fa-solid fa-shield-halved"></i>
+        <div class="brand-logo-container">
+          <img src="logo-banyumas.png" alt="Logo Kabupaten Banyumas" class="brand-logo-img">
         </div>
         <div class="brand-title">
-          <h1>SPK KONFLIK SOSIAL BANYUMAS</h1>
-          <p>Badan Kesatuan Bangsa dan Politik (BAKESBANGPOL)</p>
+          <h1>SISTEM PENDUKUNG KEPUTUSAN KONFLIK SOSIAL</h1>
+          <p>BAKESBANGPOL KABUPATEN BANYUMAS</p>
         </div>
       </div>
+
       <div class="nav-controls">
-        <div class="api-status">
-          <span class="status-dot online" id="statusDot"></span>
-          <span id="statusText">API Terhubung</span>
+        <div class="api-status" id="apiStatus" title="Status koneksi API backend">
+          <span class="status-dot" id="statusDot" aria-hidden="true"></span>
+          <span id="statusText">Menghubungkan...</span>
         </div>
-        <button class="theme-toggle" id="themeToggle" title="Ganti Mode Tampilan">
-          <i class="fa-solid fa-moon"></i>
+        <button class="theme-toggle" id="themeToggle" title="Ganti Mode Tampilan" aria-label="Toggle dark/light mode">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
         </button>
       </div>
     </header>
 
-    <!-- Main Content Layout -->
-    <main class="main-content">
-      <!-- Title Banner -->
-      <section class="banner-card">
-        <div class="banner-badge"><i class="fa-solid fa-brain"></i> Hybrid AI System (Rule-Based + Machine Learning)</div>
-        <h2>Sistem Pendukung Keputusan Penanganan Konflik Sosial</h2>
-        <p>Klasifikasi otomatis kategori konflik, tingkat risiko sosial, dan rekomendasi tindakan cepat untuk kewaspadaan dini Kabupaten Banyumas.</p>
+    <main class="main-content" role="main">
+
+      <!-- ===== HERO BANNER ===== -->
+      <section class="banner-card" aria-labelledby="bannerTitle">
+        <div class="banner-content">
+          <div class="banner-badge" aria-label="Jenis Sistem">
+            <i class="fa-solid fa-brain" aria-hidden="true"></i>
+            Hybrid AI — Rule-Based &amp; Machine Learning
+          </div>
+          <h2 id="bannerTitle">Sistem Pendukung Keputusan<br>Penanganan Konflik Sosial</h2>
+          <p>Klasifikasi otomatis kategori konflik, tingkat risiko sosial, dan rekomendasi tindakan cepat untuk kewaspadaan dini Kabupaten Banyumas.</p>
+          <div class="banner-stats-row" aria-label="Ringkasan Statistik">
+            <div class="banner-stat">
+              <span class="bval" id="bannerTotal">—</span>
+              <span class="blbl">Total Laporan</span>
+            </div>
+            <div class="banner-divider" aria-hidden="true"></div>
+            <div class="banner-stat">
+              <span class="bval" id="bannerKec">27</span>
+              <span class="blbl">Kecamatan</span>
+            </div>
+            <div class="banner-divider" aria-hidden="true"></div>
+            <div class="banner-stat">
+              <span class="bval">AI</span>
+              <span class="blbl">Hybrid System</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- Dashboard Stats -->
-      <section class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon icon-blue"><i class="fa-solid fa-file-contract"></i></div>
+      <!-- ===== DASHBOARD STATS ===== -->
+      <section class="stats-grid" aria-label="Statistik Laporan">
+        <div class="stat-card" role="status">
+          <div class="stat-icon icon-gold" aria-hidden="true"><i class="fa-solid fa-file-contract"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statTotal">0</span>
             <span class="stat-label">Total Laporan</span>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-card" role="status">
+          <div class="stat-icon icon-red" aria-hidden="true"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statTinggi">0</span>
-            <span class="stat-label">Risiko Tinggi (Merah)</span>
+            <span class="stat-label">Risiko Tinggi &#128308;</span>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon icon-orange"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <div class="stat-card" role="status">
+          <div class="stat-icon icon-orange" aria-hidden="true"><i class="fa-solid fa-circle-exclamation"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statSedang">0</span>
-            <span class="stat-label">Risiko Sedang (Oranye)</span>
+            <span class="stat-label">Risiko Sedang &#128992;</span>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon icon-green"><i class="fa-solid fa-shield-check"></i></div>
+        <div class="stat-card" role="status">
+          <div class="stat-icon icon-green" aria-hidden="true"><i class="fa-solid fa-shield-check"></i></div>
           <div class="stat-info">
             <span class="stat-value" id="statRendah">0</span>
-            <span class="stat-label">Risiko Rendah (Hijau)</span>
+            <span class="stat-label">Risiko Rendah &#128994;</span>
           </div>
         </div>
       </section>
 
-      <!-- Visual Analytics Dashboard (Charts) -->
-      <section class="analytics-grid">
+      <!-- ===== ANALYTICS CHARTS ===== -->
+      <section class="analytics-grid" aria-label="Grafik Analitik">
         <div class="card chart-card">
           <div class="card-header">
-            <i class="fa-solid fa-chart-pie"></i>
+            <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
             <h3>Distribusi Kategori Konflik</h3>
           </div>
           <div class="card-body chart-container">
-            <canvas id="categoryChart"></canvas>
+            <canvas id="categoryChart" aria-label="Grafik donat distribusi kategori konflik" role="img"></canvas>
           </div>
         </div>
         <div class="card chart-card">
           <div class="card-header">
-            <i class="fa-solid fa-chart-column"></i>
+            <i class="fa-solid fa-chart-column" aria-hidden="true"></i>
             <h3>Sebaran Wilayah Kecamatan Rawan</h3>
           </div>
           <div class="card-body chart-container">
-            <canvas id="districtChart"></canvas>
+            <canvas id="districtChart" aria-label="Grafik batang sebaran kecamatan rawan konflik" role="img"></canvas>
           </div>
         </div>
       </section>
 
-      <!-- Workspace Section (Form & Result) -->
+      <!-- ===== WORKSPACE: FORM & RESULT ===== -->
       <div class="workspace-grid">
+
         <!-- Input Form Card -->
-        <section class="card form-card">
+        <section class="card form-card" aria-labelledby="formTitle">
           <div class="card-header">
-            <i class="fa-solid fa-pen-to-square"></i>
-            <h3>Formulir Analisis Laporan Konflik</h3>
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+            <h3 id="formTitle">Formulir Laporan Konflik</h3>
           </div>
           <div class="card-body">
-            <form id="predictForm">
+            <form id="predictForm" novalidate>
+
               <div class="form-row">
                 <div class="form-group flex-1">
-                  <label for="selectKecamatan">Kecamatan Lokasi Kejadian <span class="required">*</span></label>
-                  <select id="selectKecamatan" class="select-input full-width" required>
+                  <label for="selectKecamatan">Kecamatan Lokasi <span class="required" aria-label="wajib diisi">*</span></label>
+                  <select id="selectKecamatan" class="select-input full-width" required aria-required="true">
                     <option value="Purwokerto Timur">Purwokerto Timur</option>
                     <option value="Purwokerto Barat">Purwokerto Barat</option>
                     <option value="Purwokerto Selatan">Purwokerto Selatan</option>
@@ -146,70 +204,94 @@
                   </select>
                 </div>
                 <div class="form-group flex-1">
-                  <label for="inputPihak">Pihak yang Bersengketa / Terlibat</label>
-                  <input type="text" id="inputPihak" placeholder="Misal: Warga vs Pemdes / HMI vs Pemkab" class="text-input">
+                  <label for="inputPihak">Pihak yang Terlibat</label>
+                  <input type="text" id="inputPihak" placeholder="Misal: Warga vs Pemdes" class="text-input" maxlength="200" aria-describedby="pihakHint">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="textInput">Deskripsi / Uraian Kejadian Konflik <span class="required">*</span></label>
-                <textarea 
-                  id="textInput" 
-                  rows="5" 
-                  placeholder="Masukkan kronologi atau uraian kejadian konflik sosial secara jelas..." 
-                  required></textarea>
+                <label for="textInput">Deskripsi / Uraian Kejadian Konflik <span class="required" aria-label="wajib diisi">*</span></label>
+                <textarea
+                  id="textInput"
+                  rows="5"
+                  placeholder="Masukkan kronologi atau uraian kejadian konflik sosial secara jelas dan lengkap..."
+                  required
+                  aria-required="true"
+                  maxlength="2000"
+                ></textarea>
+                <small id="charCounter" style="color:var(--text-muted);font-size:0.73rem;float:right;margin-top:4px;">0 / 2000 karakter</small>
               </div>
 
               <!-- Quick Presets -->
-              <div class="preset-section">
-                <span class="preset-label">Contoh Teks Cepat:</span>
+              <div class="preset-section" role="group" aria-label="Contoh teks cepat">
+                <span class="preset-label"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> &nbsp;Contoh Teks Cepat:</span>
                 <div class="preset-tags">
-                  <button type="button" class="preset-btn" data-text="Terjadi tawuran antar kelompok pemuda menggunakan senjata tajam dan timbul bentrok di sekitar alun-alun." data-kec="Purwokerto Timur" data-pihak="Kelompok Pemuda A vs Pemuda B">
-                    <i class="fa-solid fa-bolt"></i> Tawuran & Sajam (Kekerasan)
+                  <button type="button" class="preset-btn"
+                    data-text="Terjadi tawuran antar kelompok pemuda menggunakan senjata tajam dan timbul bentrok di sekitar alun-alun. Korban luka-luka dilaporkan dan massa semakin banyak."
+                    data-kec="Purwokerto Timur"
+                    data-pihak="Kelompok Pemuda A vs Pemuda B">
+                    <i class="fa-solid fa-bolt" aria-hidden="true"></i> Tawuran &amp; Sajam
                   </button>
-                  <button type="button" class="preset-btn" data-text="Unjuk rasa damai para pekerja/buruh menuntut penyesuaian gaji UMK di depan kantor bupati." data-kec="Purwokerto Timur" data-pihak="Serikat Buruh vs Perusahaan">
-                    <i class="fa-solid fa-users"></i> Unjuk Rasa Buruh
+                  <button type="button" class="preset-btn"
+                    data-text="Unjuk rasa damai para pekerja/buruh menuntut penyesuaian gaji UMK di depan kantor bupati. Massa membawa spanduk dan poster."
+                    data-kec="Purwokerto Timur"
+                    data-pihak="Serikat Buruh vs Perusahaan">
+                    <i class="fa-solid fa-users" aria-hidden="true"></i> Demo Buruh
                   </button>
-                  <button type="button" class="preset-btn" data-text="Musyawarah antar warga terkait kesalahpahaman penentuan batas tanah pekarangan di Desa Sumbang." data-kec="Sumbang" data-pihak="Warga Desa">
-                    <i class="fa-solid fa-handshake"></i> Sengketa Lahan Lisan
+                  <button type="button" class="preset-btn"
+                    data-text="Musyawarah antar warga terkait kesalahpahaman penentuan batas tanah pekarangan di Desa Sumbang berlangsung dengan tegang namun damai."
+                    data-kec="Sumbang"
+                    data-pihak="Warga Desa">
+                    <i class="fa-solid fa-handshake" aria-hidden="true"></i> Sengketa Lahan
+                  </button>
+                  <button type="button" class="preset-btn"
+                    data-text="Terjadi kerusuhan massa menuntut pembebasan tersangka yang dianggap tidak bersalah. Warga membakar ban dan memblokir jalan utama."
+                    data-kec="Sokaraja"
+                    data-pihak="Warga vs Aparat">
+                    <i class="fa-solid fa-fire" aria-hidden="true"></i> Kerusuhan Massa
                   </button>
                 </div>
               </div>
 
               <div class="form-actions">
-                <button type="button" id="btnReset" class="btn btn-secondary">
-                  <i class="fa-solid fa-rotate-left"></i> Reset
+                <button type="button" id="btnReset" class="btn btn-secondary" aria-label="Reset formulir">
+                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Reset
                 </button>
-                <button type="submit" id="btnSubmit" class="btn btn-primary">
-                  <span class="btn-text"><i class="fa-solid fa-microchip"></i> Proses Prediksi Hybrid</span>
-                  <span class="spinner hidden"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                <button type="submit" id="btnSubmit" class="btn btn-primary" aria-label="Proses prediksi hybrid AI">
+                  <span class="btn-text"><i class="fa-solid fa-microchip" aria-hidden="true"></i> Proses Prediksi Hybrid</span>
+                  <span class="spinner hidden" aria-hidden="true"><i class="fa-solid fa-spinner fa-spin"></i> &nbsp;Memproses...</span>
                 </button>
               </div>
+
             </form>
           </div>
         </section>
 
         <!-- Prediction Result Card -->
-        <section class="card result-card" id="resultSection">
+        <section class="card result-card" id="resultSection" aria-labelledby="resultTitle" aria-live="polite">
           <div class="card-header">
-            <i class="fa-solid fa-square-poll-vertical"></i>
-            <h3>Hasil Keputusan & Rekomendasi</h3>
+            <i class="fa-solid fa-square-poll-vertical" aria-hidden="true"></i>
+            <h3 id="resultTitle">Hasil Keputusan &amp; Rekomendasi</h3>
           </div>
           <div class="card-body">
+
             <!-- Empty State -->
             <div class="empty-result" id="emptyResult">
-              <i class="fa-solid fa-magnifying-glass-chart"></i>
+              <div class="empty-result-icon" aria-hidden="true">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+              </div>
               <h4>Belum Ada Analisis</h4>
-              <p>Isi formulir laporan konflik di samping lalu klik tombol <b>Proses Prediksi Hybrid</b> untuk melihat klasifikasi dan rekomendasi penanganan.</p>
+              <p>Isi formulir laporan konflik di sebelah kiri, lalu klik tombol <strong>Proses Prediksi Hybrid</strong> untuk melihat klasifikasi AI dan rekomendasi penanganan.</p>
             </div>
 
             <!-- Result Content (Hidden by default) -->
             <div class="result-content hidden" id="resultContent">
+
               <!-- Override Notification Banner -->
-              <div class="override-alert hidden" id="overrideAlert">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+              <div class="override-alert hidden" id="overrideAlert" role="alert">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
                 <div>
-                  <strong>RULE-BASED OVERRIDE AKTIF!</strong>
+                  <strong>⚡ RULE-BASED OVERRIDE AKTIF!</strong>
                   <p id="overrideText">Terdeteksi kata kunci kekerasan/darurat. Prediksi tingkat risiko langsung di-override menjadi TINGGI.</p>
                 </div>
               </div>
@@ -218,105 +300,138 @@
               <div class="badge-row">
                 <div class="res-badge-item">
                   <span class="badge-title">Kategori Konflik:</span>
-                  <div class="badge badge-category" id="resCategory">-</div>
+                  <div class="badge badge-category" id="resCategory" aria-live="polite">—</div>
                 </div>
                 <div class="res-badge-item">
                   <span class="badge-title">Tingkat Risiko:</span>
-                  <div class="badge badge-risk" id="resRiskBadge">-</div>
+                  <div class="badge badge-risk" id="resRiskBadge" aria-live="polite">—</div>
                 </div>
               </div>
 
-              <!-- Location & Parties Meta -->
+              <!-- Location & Parties -->
               <div class="meta-info-box">
-                <div><i class="fa-solid fa-location-dot"></i> <strong>Kecamatan:</strong> <span id="resKecamatan">-</span></div>
-                <div><i class="fa-solid fa-people-arrows"></i> <strong>Pihak:</strong> <span id="resPihak">-</span></div>
+                <div><i class="fa-solid fa-location-dot" aria-hidden="true"></i> <strong>Kecamatan:</strong> <span id="resKecamatan">—</span></div>
+                <div><i class="fa-solid fa-people-arrows" aria-hidden="true"></i> <strong>Pihak Terlibat:</strong> <span id="resPihak">—</span></div>
               </div>
 
-              <!-- Keywords Detected (If Any) -->
+              <!-- Keywords Detected -->
               <div class="keywords-box hidden" id="keywordsBox">
-                <span class="kw-label"><i class="fa-solid fa-key"></i> Kata Kunci Terdeteksi:</span>
+                <span class="kw-label"><i class="fa-solid fa-key" aria-hidden="true"></i> Kata Kunci Bahaya Terdeteksi:</span>
                 <div class="kw-tags" id="kwTags"></div>
               </div>
 
               <!-- Recommendation Card -->
               <div class="recommendation-card" id="recCard">
                 <div class="rec-header">
-                  <i class="fa-solid fa-clipboard-check"></i>
+                  <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
                   <h4>Rekomendasi Tindakan / Penanganan</h4>
                 </div>
-                <p class="rec-text" id="resRecommendation">-</p>
+                <p class="rec-text" id="resRecommendation">—</p>
               </div>
 
-              <!-- Print / Action Buttons -->
+              <!-- Action Buttons -->
               <div class="result-actions">
-                <button class="btn btn-outline" id="btnPrintRec">
-                  <i class="fa-solid fa-print"></i> Cetak Lembar Rekomendasi
+                <button class="btn btn-outline" id="btnPrintRec" aria-label="Cetak lembar rekomendasi resmi">
+                  <i class="fa-solid fa-print" aria-hidden="true"></i> Cetak Lembar Rekomendasi
                 </button>
               </div>
+
             </div>
           </div>
         </section>
       </div>
 
-      <!-- History Table Section -->
-      <section class="card history-card">
+      <!-- ===== HISTORY TABLE ===== -->
+      <section class="card history-card" aria-labelledby="historyTitle">
         <div class="card-header space-between">
           <div class="header-title">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-            <h3>Riwayat Hasil Analisis Konflik</h3>
+            <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+            <h3 id="historyTitle">Riwayat Hasil Analisis Konflik</h3>
           </div>
           <div class="header-actions">
-            <div class="search-box">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="historySearch" placeholder="Cari laporan / kec...">
+            <div class="auto-refresh-indicator" id="autoRefreshIndicator" title="Data diperbarui otomatis tiap 30 detik">
+              <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+              Auto-refresh
             </div>
-            <select id="filterRisk" class="select-input">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input type="text" id="historySearch" placeholder="Cari laporan / kec..." aria-label="Cari riwayat laporan">
+            </div>
+            <select id="filterRisk" class="select-input" aria-label="Filter berdasarkan tingkat risiko" style="width:auto;">
               <option value="ALL">Semua Risiko</option>
-              <option value="Tinggi">Risiko Tinggi (Merah)</option>
-              <option value="Sedang">Risiko Sedang (Oranye)</option>
-              <option value="Rendah">Risiko Rendah (Hijau)</option>
+              <option value="Tinggi">🔴 Risiko Tinggi</option>
+              <option value="Sedang">🟠 Risiko Sedang</option>
+              <option value="Rendah">🟢 Risiko Rendah</option>
             </select>
-            <button class="btn btn-success-outline" id="btnExportExcel" title="Unduh Rekapitulasi Excel">
-              <i class="fa-solid fa-file-excel"></i> Ekspor Excel (.xlsx)
+            <button class="btn btn-success-outline" id="btnExportExcel" title="Unduh Rekapitulasi Excel (.xlsx)" aria-label="Ekspor data riwayat ke Excel">
+              <i class="fa-solid fa-file-excel" aria-hidden="true"></i> Ekspor Excel
             </button>
-            <button class="btn btn-danger-outline" id="btnClearHistory" title="Hapus Seluruh Riwayat">
-              <i class="fa-solid fa-trash-can"></i> Hapus Semua
+            <button class="btn btn-danger-outline" id="btnClearHistory" title="Hapus Seluruh Riwayat" aria-label="Hapus semua riwayat laporan">
+              <i class="fa-solid fa-trash-can" aria-hidden="true"></i> Hapus Semua
             </button>
           </div>
         </div>
 
         <div class="card-body no-padding">
           <div class="table-responsive">
-            <table class="data-table">
+            <table class="data-table" aria-label="Tabel riwayat analisis konflik sosial">
+              <colgroup>
+                <col class="col-no">
+                <col class="col-time">
+                <col class="col-kec">
+                <col class="col-pihak">
+                <col class="col-uraian">
+                <col class="col-kat">
+                <col class="col-risk">
+                <col class="col-status">
+                <col class="col-aksi">
+              </colgroup>
               <thead>
                 <tr>
-                  <th>No</th>
-                  <th>Waktu</th>
-                  <th>Kecamatan</th>
-                  <th>Pihak Terlibat</th>
-                  <th>Uraian Kejadian</th>
-                  <th>Kategori</th>
-                  <th>Risiko</th>
-                  <th>Status Penanganan</th>
-                  <th>Aksi</th>
+                  <th scope="col">No</th>
+                  <th scope="col">Waktu</th>
+                  <th scope="col">Kecamatan</th>
+                  <th scope="col">Pihak Terlibat</th>
+                  <th scope="col">Uraian Kejadian</th>
+                  <th scope="col">Kategori</th>
+                  <th scope="col">Risiko</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Aksi</th>
                 </tr>
               </thead>
               <tbody id="historyTableBody">
-                <tr>
-                  <td colspan="9" class="text-center">Memuat riwayat...</td>
+                <tr class="empty-row">
+                  <td colspan="9" class="text-center">
+                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Memuat riwayat...
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
+
+          <!-- Pagination Control -->
+          <div class="pagination-bar" id="paginationBar">
+            <span class="pagination-info" id="paginationInfo">Menampilkan 0-0 dari 0 data</span>
+            <div class="pagination-buttons" id="paginationButtons"></div>
+          </div>
         </div>
       </section>
+
+
     </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <p>&copy; 2026 BAKESBANGPOL Kabupaten Banyumas. SPK Klasifikasi & Rekomendasi Penanganan Konflik Sosial (Hybrid Rule-Based & ML).</p>
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer" role="contentinfo">
+      <p><strong>BAKESBANGPOL Kabupaten Banyumas</strong> &mdash; Sistem Pendukung Keputusan Klasifikasi &amp; Rekomendasi Penanganan Konflik Sosial</p>
+      <p style="margin-top:4px;">Hybrid Rule-Based &amp; Machine Learning &bull; &copy; 2026 Semua Hak Dilindungi</p>
+      <div class="footer-links">
+        <a href="#" onclick="return false;" aria-label="Halaman Beranda">Beranda</a>
+        <a href="#" onclick="return false;" aria-label="Panduan Penggunaan">Panduan</a>
+        <a href="#" onclick="return false;" aria-label="Hubungi Kami">Kontak</a>
+      </div>
     </footer>
-  </div>
+
+  </div><!-- /.app-container -->
 
   <script src="app.js"></script>
 </body>

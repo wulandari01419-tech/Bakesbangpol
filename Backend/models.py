@@ -5,7 +5,7 @@ from database import Base
 
 
 class RiwayatKonflik(Base):
-    """Model database ORM untuk menyimpan riwayat masukan laporan konflik & hasil prediksi/rekomendasi."""
+    """Model database ORM untuk menyimpans riwayat masukan laporan konflik & hasil prediksi/rekomendasi."""
     __tablename__ = "riwayat_konflik"
 
     id = Column(Integer, primary_key=True, index=True)
