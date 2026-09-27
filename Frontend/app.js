@@ -333,7 +333,7 @@ function setLoadingState(isLoading) {
 // ================================================================
 async function loadHistory() {
   try {
-    const res = await fetch(`${API_BASE_URL}/history`, { signal: AbortSignal.timeout(8000) });
+    const res = await fetch(`${API_BASE_URL}/history`, { signal: AbortSignal.timeout(25000) });
     if (!res.ok) throw new Error("Gagal mengambil riwayat (HTTP " + res.status + ")");
 
     historyData = await res.json();
