@@ -117,16 +117,22 @@ def seed_database_if_empty(db: Session):
 @app.on_event("startup")
 def startup_event():
     """Memuat model ML dan seed database ke memori saat server dinyalakan."""
-    print("Memuat model ML (kategori & risiko)...")
-    predictor.get_model_kategori()
-    predictor.get_model_risiko()
-    print("Model ML berhasil dimuat ke memori!")
-    
-    db = SessionLocal()
     try:
-        seed_database_if_empty(db)
-    finally:
-        db.close()
+        print("Memuat model ML (kategori & risiko)...")
+        predictor.get_model_kategori()
+        predictor.get_model_risiko()
+        print("Model ML berhasil dimuat ke memori!")
+    except Exception as err:
+        print("[Startup Warning] Model ML deferred load:", err)
+    
+    try:
+        db = SessionLocal()
+        try:
+            seed_database_if_empty(db)
+        finally:
+            db.close()
+    except Exception as err:
+        print("[Startup Warning] Seed DB error:", err)
 
 
 # ─── Endpoints ────────────────────────────────────────────────────────────────
