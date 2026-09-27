@@ -20,52 +20,52 @@ let modalResolve = null;
 // ================================================================
 const $ = (id) => document.getElementById(id);
 
-const statusDot        = $("statusDot");
-const statusText       = $("statusText");
-const themeToggle      = $("themeToggle");
-const loadingBar       = $("loadingBar");
+const statusDot = $("statusDot");
+const statusText = $("statusText");
+const themeToggle = $("themeToggle");
+const loadingBar = $("loadingBar");
 
-const predictForm      = $("predictForm");
-const selectKecamatan  = $("selectKecamatan");
-const inputPihak       = $("inputPihak");
-const textInput        = $("textInput");
-const btnSubmit        = $("btnSubmit");
-const btnReset         = $("btnReset");
-const charCounter      = $("charCounter");
+const predictForm = $("predictForm");
+const selectKecamatan = $("selectKecamatan");
+const inputPihak = $("inputPihak");
+const textInput = $("textInput");
+const btnSubmit = $("btnSubmit");
+const btnReset = $("btnReset");
+const charCounter = $("charCounter");
 
-const emptyResult      = $("emptyResult");
-const resultContent    = $("resultContent");
-const overrideAlert    = $("overrideAlert");
-const overrideText     = $("overrideText");
-const resCategory      = $("resCategory");
-const resRiskBadge     = $("resRiskBadge");
-const resKecamatan     = $("resKecamatan");
-const resPihak         = $("resPihak");
-const keywordsBox      = $("keywordsBox");
-const kwTags           = $("kwTags");
-const recCard          = $("recCard");
+const emptyResult = $("emptyResult");
+const resultContent = $("resultContent");
+const overrideAlert = $("overrideAlert");
+const overrideText = $("overrideText");
+const resCategory = $("resCategory");
+const resRiskBadge = $("resRiskBadge");
+const resKecamatan = $("resKecamatan");
+const resPihak = $("resPihak");
+const keywordsBox = $("keywordsBox");
+const kwTags = $("kwTags");
+const recCard = $("recCard");
 const resRecommendation = $("resRecommendation");
-const btnPrintRec      = $("btnPrintRec");
+const btnPrintRec = $("btnPrintRec");
 
 const historyTableBody = $("historyTableBody");
-const historySearch    = $("historySearch");
-const filterRisk       = $("filterRisk");
-const btnClearHistory  = $("btnClearHistory");
-const btnExportExcel   = $("btnExportExcel");
+const historySearch = $("historySearch");
+const filterRisk = $("filterRisk");
+const btnClearHistory = $("btnClearHistory");
+const btnExportExcel = $("btnExportExcel");
 
-const statTotal  = $("statTotal");
+const statTotal = $("statTotal");
 const statTinggi = $("statTinggi");
 const statSedang = $("statSedang");
 const statRendah = $("statRendah");
 const bannerTotal = $("bannerTotal");
 
-const scrollToTopBtn  = $("scrollToTop");
-const modalOverlay    = $("modalOverlay");
-const modalTitle      = $("modalTitle");
-const modalMessage    = $("modalMessage");
-const modalConfirm    = $("modalConfirm");
-const modalCancel     = $("modalCancel");
-const modalIcon       = $("modalIcon");
+const scrollToTopBtn = $("scrollToTop");
+const modalOverlay = $("modalOverlay");
+const modalTitle = $("modalTitle");
+const modalMessage = $("modalMessage");
+const modalConfirm = $("modalConfirm");
+const modalCancel = $("modalCancel");
+const modalIcon = $("modalIcon");
 
 // ================================================================
 // INIT
@@ -96,7 +96,7 @@ function setupEventListeners() {
   document.querySelectorAll(".preset-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       textInput.value = btn.dataset.text || "";
-      if (btn.dataset.kec)   selectKecamatan.value = btn.dataset.kec;
+      if (btn.dataset.kec) selectKecamatan.value = btn.dataset.kec;
       if (btn.dataset.pihak) inputPihak.value = btn.dataset.pihak;
       // Trigger character counter
       textInput.dispatchEvent(new Event("input"));
@@ -263,9 +263,9 @@ function renderPredictionResult(data) {
   resultContent.style.animation = "";
 
   // Category & location
-  resCategory.textContent   = data.category       || "Tidak Terklasifikasi";
-  resKecamatan.textContent  = data.kecamatan       || "Purwokerto Timur";
-  resPihak.textContent      = data.pihak_terlibat  || "—";
+  resCategory.textContent = data.category || "Tidak Terklasifikasi";
+  resKecamatan.textContent = data.kecamatan || "Purwokerto Timur";
+  resPihak.textContent = data.pihak_terlibat || "—";
 
   // Risk badge
   const colorMap = { merah: "merah", oranye: "oranye", hijau: "hijau" };
@@ -366,12 +366,12 @@ function startAutoRefresh() {
 // UPDATE STATS WITH ANIMATED COUNTER
 // ================================================================
 function updateStats(data) {
-  const total  = data.length;
+  const total = data.length;
   const tinggi = data.filter((i) => i.tingkat_risiko === "Tinggi").length;
   const sedang = data.filter((i) => i.tingkat_risiko === "Sedang").length;
   const rendah = data.filter((i) => i.tingkat_risiko === "Rendah").length;
 
-  animateCounter(statTotal,  total);
+  animateCounter(statTotal, total);
   animateCounter(statTinggi, tinggi);
   animateCounter(statSedang, sedang);
   animateCounter(statRendah, rendah);
@@ -414,9 +414,9 @@ function renderCharts(data) {
   if (typeof Chart === "undefined") return;
 
   const isDark = document.body.classList.contains("dark-mode");
-  const textColor     = isDark ? "#94a3b8" : "#64748b";
-  const gridColor     = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
-  const legendColor   = isDark ? "#cbd5e1" : "#475569";
+  const textColor = isDark ? "#94a3b8" : "#64748b";
+  const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const legendColor = isDark ? "#cbd5e1" : "#475569";
 
   // -- Category Chart (Doughnut) --
   const catCounts = {};
@@ -537,14 +537,14 @@ function renderCharts(data) {
 // FILTER & RENDER HISTORY TABLE
 // ================================================================
 function filterAndRenderHistory() {
-  const searchTerm   = historySearch.value.toLowerCase().trim();
+  const searchTerm = historySearch.value.toLowerCase().trim();
   const selectedRisk = filterRisk.value;
 
   const filtered = historyData.filter((item) => {
     const matchesSearch =
-      (item.teks_input  || "").toLowerCase().includes(searchTerm) ||
-      (item.kategori    || "").toLowerCase().includes(searchTerm) ||
-      (item.kecamatan   || "").toLowerCase().includes(searchTerm) ||
+      (item.teks_input || "").toLowerCase().includes(searchTerm) ||
+      (item.kategori || "").toLowerCase().includes(searchTerm) ||
+      (item.kecamatan || "").toLowerCase().includes(searchTerm) ||
       (item.pihak_terlibat || "").toLowerCase().includes(searchTerm);
     const matchesRisk = selectedRisk === "ALL" || item.tingkat_risiko === selectedRisk;
     return matchesSearch && matchesRisk;
@@ -563,7 +563,7 @@ function filterAndRenderHistory() {
   const paginationButtons = $("paginationButtons");
 
   if (paginationInfo) {
-    paginationInfo.textContent = totalItems > 0 
+    paginationInfo.textContent = totalItems > 0
       ? `Menampilkan ${startIndex + 1}–${endIndex} dari ${totalItems} laporan`
       : "Menampilkan 0 data";
   }
@@ -573,7 +573,7 @@ function filterAndRenderHistory() {
       paginationButtons.innerHTML = "";
     } else {
       let btnsHtml = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changeHistoryPage(${currentPage - 1})"><i class="fa-solid fa-chevron-left"></i> Prev</button>`;
-      
+
       for (let p = 1; p <= totalPages; p++) {
         btnsHtml += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="changeHistoryPage(${p})">${p}</button>`;
       }
@@ -624,8 +624,8 @@ function filterAndRenderHistory() {
         <td>
           <select class="status-select" onchange="updateStatusPenanganan(${item.id}, this.value)" aria-label="Status penanganan laporan ${globalIndex}">
             <option value="Dalam Proses" ${currentStatus === "Dalam Proses" ? "selected" : ""}>⏳ Dalam Proses</option>
-            <option value="Mediasi"      ${currentStatus === "Mediasi"      ? "selected" : ""}>🤝 Mediasi</option>
-            <option value="Tertangani"   ${currentStatus === "Tertangani"   ? "selected" : ""}>✅ Tertangani</option>
+            <option value="Mediasi"      ${currentStatus === "Mediasi" ? "selected" : ""}>🤝 Mediasi</option>
+            <option value="Tertangani"   ${currentStatus === "Tertangani" ? "selected" : ""}>✅ Tertangani</option>
           </select>
         </td>
         <td>
@@ -761,11 +761,11 @@ function setupTheme() {
 // PRINT RECOMMENDATION
 // ================================================================
 function printRecommendation() {
-  const kat   = resCategory.textContent;
-  const risk  = resRiskBadge.textContent;
-  const rec   = resRecommendation.textContent;
-  const text  = textInput.value;
-  const kec   = resKecamatan.textContent;
+  const kat = resCategory.textContent;
+  const risk = resRiskBadge.textContent;
+  const rec = resRecommendation.textContent;
+  const text = textInput.value;
+  const kec = resKecamatan.textContent;
   const pihak = resPihak.textContent;
 
   if (kat === "—" || kat === "") {
@@ -1090,9 +1090,9 @@ function showToast(message, type = "info") {
 
   const icons = {
     success: "fa-circle-check",
-    error:   "fa-circle-xmark",
+    error: "fa-circle-xmark",
     warning: "fa-triangle-exclamation",
-    info:    "fa-circle-info"
+    info: "fa-circle-info"
   };
 
   const toast = document.createElement("div");
@@ -1119,22 +1119,22 @@ function showToast(message, type = "info") {
 function showModal(title, message, type = "warning") {
   return new Promise((resolve) => {
     modalResolve = resolve;
-    modalTitle.textContent   = title;
+    modalTitle.textContent = title;
     modalMessage.textContent = message;
 
     // Icon & style by type
     const iconMap = {
-      danger:  { icon: "fa-trash-can",           color: "#dc2626", bg: "rgba(220,38,38,0.1)"  },
+      danger: { icon: "fa-trash-can", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
       warning: { icon: "fa-triangle-exclamation", color: "#ea580c", bg: "rgba(234,88,12,0.1)" },
-      info:    { icon: "fa-circle-info",           color: "#3b82f6", bg: "rgba(59,130,246,0.1)"}
+      info: { icon: "fa-circle-info", color: "#3b82f6", bg: "rgba(59,130,246,0.1)" }
     };
 
     const cfg = iconMap[type] || iconMap.warning;
     modalIcon.innerHTML = `<i class="fa-solid ${cfg.icon}" aria-hidden="true"></i>`;
-    modalIcon.style.color      = cfg.color;
+    modalIcon.style.color = cfg.color;
     modalIcon.style.background = cfg.bg;
     modalConfirm.style.borderColor = cfg.color;
-    modalConfirm.style.color       = cfg.color;
+    modalConfirm.style.color = cfg.color;
 
     modalOverlay.classList.remove("hidden");
     modalCancel.focus();

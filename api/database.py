@@ -34,6 +34,7 @@ ensure_mysql_database_exists()
 # String koneksi MySQL SQLAlchemy
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+# Fallback to SQLite if MySQL fails (e.g., on Vercel Serverless cloud environment)
 try:
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL,
@@ -42,6 +43,7 @@ try:
         pool_size=10,
         max_overflow=20
     )
+    # Test connection
     with engine.connect() as conn:
         pass
 except Exception as err:
