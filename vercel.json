@@ -32,6 +32,10 @@
       "dest": "api/index.py"
     },
     {
+      "src": "/history/(.*)",
+      "dest": "api/index.py"
+    },
+    {
       "src": "/rekapitulasi",
       "dest": "api/index.py"
     },
