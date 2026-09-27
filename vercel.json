@@ -1,14 +1,47 @@
 {
+  "version": 2,
   "builds": [
     {
-      "src": "Backend/main.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "Frontend/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/docs",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/openapi.json",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/predict",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/history",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/rekapitulasi",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/stats",
+      "dest": "api/index.py"
+    },
+    {
       "src": "/(.*)",
-      "dest": "Backend/main.py"
+      "dest": "Frontend/$1"
     }
   ]
 }
