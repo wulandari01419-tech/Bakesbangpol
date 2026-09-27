@@ -1,9 +1,17 @@
 import sys
 import os
 
-# Tambahkan folder Backend ke sys.path agar modul internal seperti models, schemas, database dapat di-import
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "Backend"))
+# Tambahkan path Backend & root ke sys.path secara eksplisit
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
+backend_dir = os.path.join(parent_dir, "Backend")
 
-from Backend.main import app
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
 
-# Export app untuk Vercel Serverless Function
+try:
+    from main import app
+except ImportError:
+    from Backend.main import app

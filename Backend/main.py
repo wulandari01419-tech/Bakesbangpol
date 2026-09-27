@@ -10,10 +10,16 @@ from sqlalchemy import text
 from typing import List
 import pandas as pd
 
-import models
-import schemas
-import predictor
-from database import engine, get_db, SessionLocal
+try:
+    import models
+    import schemas
+    import predictor
+    from database import engine, get_db, SessionLocal
+except ImportError:
+    from Backend import models
+    from Backend import schemas
+    from Backend import predictor
+    from Backend.database import engine, get_db, SessionLocal
 
 # ─── Migration & Table Creation MySQL ──────────────────────────────────────────
 
