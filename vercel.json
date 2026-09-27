@@ -1,51 +1,40 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "Frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.py"
+      "source": "/docs",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/docs",
-      "dest": "api/index.py"
+      "source": "/openapi.json",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/openapi.json",
-      "dest": "api/index.py"
+      "source": "/predict",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/predict",
-      "dest": "api/index.py"
+      "source": "/history",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/history",
-      "dest": "api/index.py"
+      "source": "/history/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/history/(.*)",
-      "dest": "api/index.py"
+      "source": "/rekapitulasi",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/rekapitulasi",
-      "dest": "api/index.py"
+      "source": "/stats",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/stats",
-      "dest": "api/index.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "Frontend/$1"
+      "source": "/(.*)",
+      "destination": "/Frontend/$1"
     }
   ]
 }
